@@ -31,6 +31,8 @@ class SlideCountdownSeparated extends StatefulWidget {
     this.infinityCountUp = false,
     this.slideAnimationDuration = const Duration(milliseconds: 300),
     this.onDurationChanged,
+    this.showTimeUnit = false,
+    this.timeUnitStyle,
   }) : super(key: key);
 
   /// [Duration] is the duration of the countdown slide,
@@ -122,6 +124,9 @@ class SlideCountdownSeparated extends StatefulWidget {
 
   /// this method allows you to stream from remaining [Duration]  or current [Duration]
   final Function(Duration)? onDurationChanged;
+
+  final bool showTimeUnit;
+  final TextStyle? timeUnitStyle;
 
   @override
   _SlideCountdownSeparatedState createState() =>
@@ -405,8 +410,7 @@ class _SlideCountdownSeparatedState extends State<SlideCountdownSeparated> {
             daysWidget(duration),
             separator(
               title: _durationTitle.days,
-              visible: !(duration.inDays < 1 &&
-                  !widget.showZeroValue &&
+              visible: !((duration.inDays < 1 && !widget.showZeroValue) ||
                   !widget.withDays),
             ),
           ],
@@ -483,7 +487,7 @@ class _SlideCountdownSeparatedState extends State<SlideCountdownSeparated> {
 
   Widget daysWidget(Duration duration) {
     return Builder(builder: (context) {
-      if (duration.inDays < 1 && !widget.showZeroValue && !widget.withDays) {
+      if ((duration.inDays < 1 && !widget.showZeroValue) || !widget.withDays) {
         return const SizedBox.shrink();
       } else {
         return boxDecoration(
@@ -509,6 +513,11 @@ class _SlideCountdownSeparatedState extends State<SlideCountdownSeparated> {
                 showZeroValue: !(duration.inHours < 1 &&
                     widget.separatorType == SeparatorType.title),
               ),
+              if (widget.showTimeUnit)
+                Text(
+                  "일",
+                  style: widget.timeUnitStyle,
+                ),
             ],
           ),
         );
@@ -544,6 +553,11 @@ class _SlideCountdownSeparatedState extends State<SlideCountdownSeparated> {
                 showZeroValue: !(duration.inHours < 1 &&
                     widget.separatorType == SeparatorType.title),
               ),
+              if (widget.showTimeUnit)
+                Text(
+                  "시",
+                  style: widget.timeUnitStyle,
+                ),
             ],
           ),
         );
@@ -581,6 +595,11 @@ class _SlideCountdownSeparatedState extends State<SlideCountdownSeparated> {
                 showZeroValue: !(duration.inMinutes < 1 &&
                     widget.separatorType == SeparatorType.title),
               ),
+              if (widget.showTimeUnit)
+                Text(
+                  "분",
+                  style: widget.timeUnitStyle,
+                ),
             ],
           ),
         );
@@ -610,6 +629,11 @@ class _SlideCountdownSeparatedState extends State<SlideCountdownSeparated> {
             curve: widget.curve,
             countUp: widget.countUp,
           ),
+          if (widget.showTimeUnit)
+            Text(
+              "초",
+              style: widget.timeUnitStyle,
+            ),
         ],
       ),
     );
